@@ -46,7 +46,7 @@ public class InternalFragment extends Fragment {
         tv_pathHolder = view.findViewById(R.id.tv_pathHolder);
         img_back = view.findViewById(R.id.img_black);
 
-        String internalStorage = System.getenv("path");
+        String internalStorage = System.getenv("EXTERNAL_STORAGE");
         storage = new File(internalStorage);
 
         tv_pathHolder.setText(storage.getAbsolutePath());
