@@ -1,11 +1,14 @@
 package com.example.filemanager.Fragments;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.filemanager.FileAdapter;
+import com.example.filemanager.FileOpener;
 import com.example.filemanager.OnFileSelectedListener;
 import com.example.filemanager.R;
 import com.karumi.dexter.Dexter;
@@ -26,6 +30,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import org.w3c.dom.Text;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +43,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
     private TextView tv_pathHolder;
     File storage;
     String data;
+    String[] items = {"Details", "Rename", "Delete", "Share"};
     View view;
 
     @Nullable
@@ -133,10 +139,62 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                     internalFragment
             ).addToBackStack(null).commit();
         }
+        else {
+            try {
+                FileOpener.openFile(getContext(), file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
     public void onFileLongClicked(File file) {
+        final Dialog optionDialog = new Dialog(getContext());
+        optionDialog.setContentView(R.layout.option_dialog);
+        optionDialog.setTitle("Select Option");
+        ListView options = (ListView) optionDialog.findViewById(R.id.List);
+        CustomAdapter customAdapter = new CustomAdapter();
+        options.setAdapter(customAdapter);
+        optionDialog.show();
+    }
 
+    class CustomAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return items.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View myView = getLayoutInflater().inflate(R.layout.option_layout, null);
+            TextView txtOption = myView.findViewById(R.id.txtOption);
+            ImageView imgOption = myView.findViewById(R.id.imgOption);
+            txtOption.setText(items[position]);
+            if (items[position].equals("Details")) {
+                imgOption.setImageResource(R.drawable.ic_details);
+            }
+            else if (items[position].equals("Rename")) {
+                imgOption.setImageResource(R.drawable.ic_rename);
+            }
+            else if (items[position].equals("Delete")) {
+                imgOption.setImageResource(R.drawable.ic_delete);
+            }
+            else if (items[position].equals("Share")) {
+                imgOption.setImageResource(R.drawable.ic_share);
+            }
+            return myView;
+        }
     }
 }
