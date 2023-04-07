@@ -142,6 +142,13 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
         recyclerView.setAdapter(fileAdapter);
     }
 
+    private boolean noFileNameExist(String name) {
+        for (File file : fileList) {
+            if (file.getName().equals(name)) return false;
+        }
+        return true;
+    }
+
     @Override
     public void onFileClicked(File file) {
         if (file.isDirectory()) {
@@ -223,19 +230,22 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                                 String extension = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
                                 File current = new File(file.getAbsolutePath());
                                 File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extension);
-                                if (current.renameTo(destination)) {
-                                    try {
-                                        fileList.set(filePosition, destination);
-                                    } catch (Exception e) {
-                                        Toast.makeText(getContext(),
-                                                String.valueOf(e), Toast.LENGTH_SHORT).show();
+                                if (noFileNameExist(destination.getName())) {
+                                    if (current.renameTo(destination)) {
+                                        try {
+                                            fileList.set(filePosition, destination);
+                                        } catch (Exception e) {
+                                            Toast.makeText(getContext(), String.valueOf(e), Toast.LENGTH_SHORT).show();
+                                        }
+                                        fileAdapter.notifyItemChanged(filePosition);
+                                        Toast.makeText(getContext(), "Renamed successfully!", Toast.LENGTH_SHORT).show();
                                     }
-                                    fileAdapter.notifyItemChanged(filePosition);
-                                    Toast.makeText(getContext(), "Renamed successfully!", Toast.LENGTH_SHORT).show();
+                                    else {
+                                        Toast.makeText(getContext(), "Couldn't rename!", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                                 else {
-                                    Toast.makeText(getContext(),
-                                            "Couldn't rename!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Couldn't rename, current file name already exists!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
