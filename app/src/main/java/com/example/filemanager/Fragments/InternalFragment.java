@@ -135,7 +135,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
     private void displayFiles() {
         recyclerView = view.findViewById(R.id.recycler_internal);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
         fileList = new ArrayList<>();
         fileList.addAll(findFiles(storage));
         fileAdapter = new FileAdapter(getContext(), fileList, this);

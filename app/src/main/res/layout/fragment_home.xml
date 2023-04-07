@@ -2,15 +2,222 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    android:weightSum="3">
 
-    <TextView
-        android:text="Home Fragment"
-        android:textSize="32sp"
-        android:gravity="center"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:orientation="vertical">
 
-    </TextView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/linearImage"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:src="@drawable/ic_image"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp">
+
+                </ImageView>
+                <TextView
+                    android:text="Images"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </TextView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearVideo"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:src="@drawable/ic_video"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp">
+
+                </ImageView>
+                <TextView
+                    android:text="Videos"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </TextView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearMusic"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:src="@drawable/ic_music"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp">
+
+                </ImageView>
+                <TextView
+                    android:text="Musics"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </TextView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/linearDocs"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:src="@drawable/ic_docs"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp">
+
+                </ImageView>
+                <TextView
+                    android:text="Documents"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </TextView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearDownloads"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:src="@drawable/ic_download"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp">
+
+                </ImageView>
+                <TextView
+                    android:text="Downloads"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </TextView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearApk"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:src="@drawable/ic_android"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp">
+
+                </ImageView>
+                <TextView
+                    android:text="APKs"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </TextView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/green">
+
+        </View>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recents:"
+            android:textColor="@color/green"
+            android:layout_marginLeft="8dp"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp">
+
+        </TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_recent"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
 
 </LinearLayout>

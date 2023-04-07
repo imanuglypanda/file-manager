@@ -77,10 +77,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
             holder.imgFile.setImageResource(R.drawable.ic_docs);
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".mp3")) {
-            holder.imgFile.setImageResource(R.drawable.ic_music_mp3);
+            holder.imgFile.setImageResource(R.drawable.ic_music);
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".wav")) {
-            holder.imgFile.setImageResource(R.drawable.ic_music_wav);
+            holder.imgFile.setImageResource(R.drawable.ic_music);
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".mp4")) {
             holder.imgFile.setImageResource(R.drawable.ic_video);
