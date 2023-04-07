@@ -20,6 +20,5 @@ public class FileViewHolder extends RecyclerView.ViewHolder {
         tvSize = itemView.findViewById(R.id.tvFileSize);
         container = itemView.findViewById(R.id.container);
         imgFile = itemView.findViewById(R.id.img_fileType);
-
     }
 }

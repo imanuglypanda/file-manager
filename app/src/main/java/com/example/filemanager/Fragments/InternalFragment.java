@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+
 public class InternalFragment extends Fragment implements OnFileSelectedListener {
     private RecyclerView recyclerView;
     private FileAdapter fileAdapter;

@@ -1,10 +1,13 @@
 package com.example.filemanager;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,16 +62,19 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         }
 
         if (file.get(position).getName().toLowerCase().endsWith(".jpeg")) {
-            holder.imgFile.setImageResource(R.drawable.ic_image);
+            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
+            holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".jpg")) {
-            holder.imgFile.setImageResource(R.drawable.ic_image);
+            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
+            holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".png")) {
-            holder.imgFile.setImageResource(R.drawable.ic_image);
+            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
+            holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".webp")) {
-            holder.imgFile.setImageResource(R.drawable.ic_image);
+            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".pdf")) {
             holder.imgFile.setImageResource(R.drawable.ic_pdf);
@@ -90,6 +96,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         }
         else {
             holder.imgFile.setImageResource(R.drawable.ic_folder);
+            holder.imgFile.setPadding(30, 30, 30, 30);
         }
 
         holder.container.setOnClickListener(new View.OnClickListener() {
