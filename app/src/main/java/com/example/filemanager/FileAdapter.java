@@ -1,9 +1,13 @@
 package com.example.filemanager;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,10 +18,12 @@ import java.util.List;
 public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
     private Context context;
     private List<File> file;
+    private OnFileSelectedListener listener;
 
-    public FileAdapter(Context context, List<File> file) {
+    public FileAdapter(Context context, List<File> file, OnFileSelectedListener listener) {
         this.context = context;
         this.file = file;
+        this.listener = listener;
     }
 
     @NonNull
@@ -56,10 +62,19 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         }
 
         if (file.get(position).getName().toLowerCase().endsWith(".jpeg")) {
-            holder.imgFile.setImageResource(R.drawable.ic_image);
+            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
+            holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
+        else if (file.get(position).getName().toLowerCase().endsWith(".jpg")) {
+            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
+            holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".png")) {
-            holder.imgFile.setImageResource(R.drawable.ic_image);
+            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
+            holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
+        else if (file.get(position).getName().toLowerCase().endsWith(".webp")) {
+            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".pdf")) {
             holder.imgFile.setImageResource(R.drawable.ic_pdf);
@@ -68,10 +83,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
             holder.imgFile.setImageResource(R.drawable.ic_docs);
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".mp3")) {
-            holder.imgFile.setImageResource(R.drawable.ic_music_mp3);
+            holder.imgFile.setImageResource(R.drawable.ic_music);
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".wav")) {
-            holder.imgFile.setImageResource(R.drawable.ic_music_wav);
+            holder.imgFile.setImageResource(R.drawable.ic_music);
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".mp4")) {
             holder.imgFile.setImageResource(R.drawable.ic_video);
@@ -81,7 +96,23 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         }
         else {
             holder.imgFile.setImageResource(R.drawable.ic_folder);
+            holder.imgFile.setPadding(30, 30, 30, 30);
         }
+
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onFileClicked(file.get(position));
+            }
+        });
+
+        holder.container.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listener.onFileLongClicked(file.get(position), position);
+                return true;
+            }
+        });
     }
 
     @Override
