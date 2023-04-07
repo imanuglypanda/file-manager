@@ -4,7 +4,10 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,6 +101,9 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
     }
 
     public ArrayList<File> findFiles(File file) {
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
         ArrayList<File> arrayList = new ArrayList<>();
         File[] files = file.listFiles();
 
@@ -112,6 +118,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                     singleFile.getName().toLowerCase().endsWith(".jpeg") ||
                     singleFile.getName().toLowerCase().endsWith(".jpg") ||
                     singleFile.getName().toLowerCase().endsWith(".png") ||
+                    singleFile.getName().toLowerCase().endsWith(".webp") ||
                     singleFile.getName().toLowerCase().endsWith(".mp3") ||
                     singleFile.getName().toLowerCase().endsWith(".wav") ||
                     singleFile.getName().toLowerCase().endsWith(".mp4") ||
@@ -170,6 +177,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
+                String fileName;
 
                 switch (selectedItem) {
                     case "Details":
@@ -215,13 +223,17 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                                 String extension = file.getAbsolutePath().
                                         substring(file.getAbsolutePath().lastIndexOf("."));
                                 File current = new File(file.getAbsolutePath());
-                                File destination = new File(file.getAbsolutePath().
-                                        replace(file.getName(), new_name) + extension);
+                                File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extension);
                                 if (current.renameTo(destination)) {
-                                    fileList.set(position, destination);
+                                    try {
+                                        fileList.set(position, destination);
+                                    } catch (Exception e) {
+                                        Toast.makeText(getContext(),
+                                                String.valueOf(e), Toast.LENGTH_SHORT).show();
+                                    }
                                     fileAdapter.notifyItemChanged(position);
                                     Toast.makeText(getContext(),
-                                            "Renamed!", Toast.LENGTH_SHORT).show();
+                                            "Rename " + file.getName() +  " from[" + position + "] to " + destination, Toast.LENGTH_LONG).show();
                                 }
                                 else {
                                     Toast.makeText(getContext(),
@@ -240,6 +252,44 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
 
                         AlertDialog alertDialog_rename = renameDialog.create();
                         alertDialog_rename.show();
+                        break;
+                    case "Delete":
+                        fileName = file.getName();
+                        AlertDialog.Builder deleteDialog = new AlertDialog.Builder(getContext());
+                        deleteDialog.setTitle("Delete " + fileName + "?");
+                        deleteDialog.setPositiveButton(
+                                "Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                file.delete();
+                                fileList.remove(position);
+                                fileAdapter.notifyDataSetChanged();
+                                Toast.makeText(
+                                        getContext(),
+                                        fileName + " Deleted successfully",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            }
+                        });
+
+                        deleteDialog.setNegativeButton(
+                                "No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                optionDialog.cancel();
+                            }
+                        });
+
+                        AlertDialog alertDialog_delete = deleteDialog.create();
+                        alertDialog_delete.show();
+                        break;
+                    case "Share":
+                        fileName = file.getName();
+                        Intent share = new Intent();
+                        share.setAction(Intent.ACTION_SEND);
+                        share.setType("image/jpeg");
+                        share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                        startActivity(Intent.createChooser(share, "Share " + fileName));
                         break;
                 }
             }

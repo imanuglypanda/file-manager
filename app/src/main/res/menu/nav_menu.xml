@@ -12,12 +12,6 @@
             android:icon="@drawable/ic_storage">
 
         </item>
-        <item
-            android:id="@+id/nav_card"
-            android:title="SD Card"
-            android:icon="@drawable/ic_sdcard">
-
-        </item>
         <item android:title="More">
             <menu>
                 <item

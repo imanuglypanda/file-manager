@@ -67,6 +67,9 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         else if (file.get(position).getName().toLowerCase().endsWith(".png")) {
             holder.imgFile.setImageResource(R.drawable.ic_image);
         }
+        else if (file.get(position).getName().toLowerCase().endsWith(".webp")) {
+            holder.imgFile.setImageResource(R.drawable.ic_image);
+        }
         else if (file.get(position).getName().toLowerCase().endsWith(".pdf")) {
             holder.imgFile.setImageResource(R.drawable.ic_pdf);
         }

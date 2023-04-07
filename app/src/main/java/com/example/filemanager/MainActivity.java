@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.filemanager.Fragments.CardFragment;
 import com.example.filemanager.Fragments.HomeFragment;
 import com.example.filemanager.Fragments.InternalFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -66,13 +65,6 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.fragment_container,
                         internalFragment
-                ).addToBackStack(null).commit();
-                break;
-            case R.id.nav_card:
-                CardFragment cardFragment = new CardFragment();
-                getSupportFragmentManager().beginTransaction().replace(
-                        R.id.fragment_container,
-                        cardFragment
                 ).addToBackStack(null).commit();
                 break;
             case R.id.nav_about:
