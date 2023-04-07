@@ -193,7 +193,7 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
     }
 
     @Override
-    public void onFileLongClicked(File file, int position) {
+    public void onFileLongClicked(File file, int filePosition) {
         final Dialog optionDialog = new Dialog(getContext());
         optionDialog.setContentView(R.layout.option_dialog);
         optionDialog.setTitle("Select Option");
@@ -255,14 +255,13 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
                                 File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extension);
                                 if (current.renameTo(destination)) {
                                     try {
-                                        fileList.set(position, destination);
+                                        fileList.set(filePosition, destination);
                                     } catch (Exception e) {
                                         Toast.makeText(getContext(),
                                                 String.valueOf(e), Toast.LENGTH_SHORT).show();
                                     }
-                                    fileAdapter.notifyItemChanged(position);
-                                    Toast.makeText(getContext(),
-                                            "Rename " + file.getName() +  " from[" + position + "] to " + destination, Toast.LENGTH_LONG).show();
+                                    fileAdapter.notifyItemChanged(filePosition);
+                                    Toast.makeText(getContext(), "Renamed successfully!", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
                                     Toast.makeText(getContext(),
@@ -291,7 +290,7 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 file.delete();
-                                fileList.remove(position);
+                                fileList.remove(filePosition);
                                 fileAdapter.notifyDataSetChanged();
                                 Toast.makeText(
                                         getContext(),
