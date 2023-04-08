@@ -6,9 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.filemanager.Fragments.HomeFragment;
@@ -18,6 +22,7 @@ import com.google.android.material.navigation.NavigationView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
+    private TextView fragmentCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +82,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        getSupportFragmentManager().popBackStackImmediate();
+//        getSupportFragmentManager().popBackStackImmediate();
+
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
+        }
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(fragment)
+                    .commit();
             super.onBackPressed();
         }
     }

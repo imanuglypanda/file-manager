@@ -13,14 +13,29 @@
         android:background="@color/black"
         android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/img_fileType"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:src="@drawable/folder">
+            android:layout_weight="3">
+            <ImageView
+                android:id="@+id/img_fileType"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-        </ImageView>
+                android:src="@drawable/folder">
+
+            </ImageView>
+
+            <TextView
+                android:id="@+id/mediaTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:background="#80000000"
+                android:gravity="bottom|end"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

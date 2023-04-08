@@ -1,8 +1,13 @@
 package com.example.filemanager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +18,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 
 public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
     private Context context;
     private List<File> file;
     private OnFileSelectedListener listener;
+    private MediaMetadataRetriever retriever;
+    private MediaPlayer mediaPlayer;
 
     public FileAdapter(Context context, List<File> file, OnFileSelectedListener listener) {
         this.context = context;
@@ -84,12 +94,30 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".mp3")) {
             holder.imgFile.setImageResource(R.drawable.ic_music);
+            holder.mediaTime.setText(getTotalDuration(file.get(position)));
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".wav")) {
             holder.imgFile.setImageResource(R.drawable.ic_music);
+            holder.mediaTime.setText(getTotalDuration(file.get(position)));
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".mp4")) {
-            holder.imgFile.setImageResource(R.drawable.ic_video);
+//            holder.imgFile.setImageResource(R.drawable.ic_video);
+            retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(file.get(position).getAbsolutePath());
+            Bitmap frameBitmap = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            if (frameBitmap != null) {
+                holder.imgFile.setImageBitmap(frameBitmap);
+                try {
+                    retriever.release();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                holder.mediaTime.setText(getTotalDuration(file.get(position)));
+
+            } else {
+                holder.imgFile.setImageResource(R.drawable.ic_video);
+            }
         }
         else if (file.get(position).getName().toLowerCase().endsWith(".apk")) {
             holder.imgFile.setImageResource(R.drawable.ic_android);
@@ -113,6 +141,25 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                 return true;
             }
         });
+    }
+
+    @SuppressLint("DefaultLocale")
+    public String getTotalDuration(File file) {
+        mediaPlayer = MediaPlayer.create(context.getApplicationContext(), Uri.parse(file.getAbsolutePath()));
+        int duration = mediaPlayer.getDuration();
+        mediaPlayer.release();
+        if (duration >= 600000) {
+            return String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(duration),
+                    TimeUnit.MILLISECONDS.toMinutes(duration),
+                    TimeUnit.MILLISECONDS.toSeconds(duration) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+        } else {
+            return String.format("%02d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(duration),
+                    TimeUnit.MILLISECONDS.toSeconds(duration) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+        }
     }
 
     @Override
