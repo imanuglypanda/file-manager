@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 
@@ -62,7 +63,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                     items += 1;
                 }
             }
-            holder.tvSize.setText(String.valueOf(items) + "Files");
+            holder.tvSize.setText(items + " Files");
         }
         else {
             holder.tvSize.setText(Formatter.formatShortFileSize(
@@ -71,40 +72,51 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
             ));
         }
 
-        if (file.get(position).getName().toLowerCase().endsWith(".jpeg")) {
-            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
+        String fileName = file.get(position).getName().toLowerCase();
+
+        if (fileName.endsWith(".jpeg")) {
+            holder.imgFile.setImageBitmap(
+                    BitmapFactory.decodeFile(file.get(position).getAbsolutePath())
+            );
             holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
-        else if (file.get(position).getName().toLowerCase().endsWith(".jpg")) {
-            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
+        else if (fileName.endsWith(".jpg")) {
+            holder.imgFile.setImageBitmap(
+                    BitmapFactory.decodeFile(file.get(position).getAbsolutePath())
+            );
             holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
-        else if (file.get(position).getName().toLowerCase().endsWith(".png")) {
-            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
+        else if (fileName.endsWith(".png")) {
+            holder.imgFile.setImageBitmap(
+                    BitmapFactory.decodeFile(file.get(position).getAbsolutePath())
+            );
             holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
-        else if (file.get(position).getName().toLowerCase().endsWith(".webp")) {
-            holder.imgFile.setImageBitmap(BitmapFactory.decodeFile(file.get(position).getAbsolutePath()));
+        else if (fileName.endsWith(".webp")) {
+            holder.imgFile.setImageBitmap(
+                    BitmapFactory.decodeFile(file.get(position).getAbsolutePath())
+            );
         }
-        else if (file.get(position).getName().toLowerCase().endsWith(".pdf")) {
+        else if (fileName.endsWith(".pdf")) {
             holder.imgFile.setImageResource(R.drawable.ic_pdf);
         }
-        else if (file.get(position).getName().toLowerCase().endsWith(".doc")) {
+        else if (fileName.endsWith(".doc")) {
             holder.imgFile.setImageResource(R.drawable.ic_docs);
         }
-        else if (file.get(position).getName().toLowerCase().endsWith(".mp3")) {
+        else if (fileName.endsWith(".mp3")) {
             holder.imgFile.setImageResource(R.drawable.ic_music);
             holder.mediaTime.setText(getTotalDuration(file.get(position)));
         }
-        else if (file.get(position).getName().toLowerCase().endsWith(".wav")) {
+        else if (fileName.endsWith(".wav")) {
             holder.imgFile.setImageResource(R.drawable.ic_music);
             holder.mediaTime.setText(getTotalDuration(file.get(position)));
         }
-        else if (file.get(position).getName().toLowerCase().endsWith(".mp4")) {
+        else if (fileName.endsWith(".mp4")) {
 //            holder.imgFile.setImageResource(R.drawable.ic_video);
             retriever = new MediaMetadataRetriever();
             retriever.setDataSource(file.get(position).getAbsolutePath());
-            Bitmap frameBitmap = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            Bitmap frameBitmap = retriever.getFrameAtTime(
+                    0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
             if (frameBitmap != null) {
                 holder.imgFile.setImageBitmap(frameBitmap);
                 try {
@@ -119,7 +131,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                 holder.imgFile.setImageResource(R.drawable.ic_video);
             }
         }
-        else if (file.get(position).getName().toLowerCase().endsWith(".apk")) {
+        else if (fileName.endsWith(".apk")) {
             holder.imgFile.setImageResource(R.drawable.ic_android);
         }
         else {
@@ -143,22 +155,24 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         });
     }
 
-    @SuppressLint("DefaultLocale")
     public String getTotalDuration(File file) {
-        mediaPlayer = MediaPlayer.create(context.getApplicationContext(), Uri.parse(file.getAbsolutePath()));
+        mediaPlayer = MediaPlayer.create(
+                context.getApplicationContext(),
+                Uri.parse(file.getAbsolutePath())
+        );
         int duration = mediaPlayer.getDuration();
         mediaPlayer.release();
-        if (duration >= 600000) {
-            return String.format("%02d:%02d:%02d",
+        if (duration >= 3600000) {
+            return String.format(Locale.getDefault(),"%02d:%02d:%02d",
                     TimeUnit.MILLISECONDS.toHours(duration),
                     TimeUnit.MILLISECONDS.toMinutes(duration),
                     TimeUnit.MILLISECONDS.toSeconds(duration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
         } else {
-            return String.format("%02d:%02d",
+            return String.format(Locale.getDefault(), "%02d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes(duration),
                     TimeUnit.MILLISECONDS.toSeconds(duration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
         }
     }
 

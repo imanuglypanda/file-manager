@@ -57,7 +57,8 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_categorized, container, false);
 
         Bundle bundle = this.getArguments();
@@ -250,6 +251,7 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
                         AlertDialog.Builder renameDialog = new AlertDialog.Builder(getContext());
                         renameDialog.setTitle("Rename File:");
                         final EditText name = new EditText(getContext());
+                        name.setText(file.getName().substring(0, file.getName().indexOf(".")));
                         renameDialog.setView(name);
 
                         renameDialog.setPositiveButton(
@@ -260,24 +262,42 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
                                 String extension = file.getAbsolutePath().
                                         substring(file.getAbsolutePath().lastIndexOf("."));
                                 File current = new File(file.getAbsolutePath());
-                                File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extension);
+                                File destination = new File(file.getAbsolutePath()
+                                        .replace(file.getName(), new_name) + extension);
                                 if (noFileNameExist(destination.getName())) {
                                     if (current.renameTo(destination)) {
                                         try {
                                             fileList.set(filePosition, destination);
                                         } catch (Exception e) {
-                                            Toast.makeText(getContext(), String.valueOf(e), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(
+                                                    getContext(),
+                                                    String.valueOf(e),
+                                                    Toast.LENGTH_SHORT
+                                            ).show();
                                         }
                                         fileAdapter.notifyItemChanged(filePosition);
-                                        Toast.makeText(getContext(), "Renamed successfully!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(
+                                                getContext(),
+                                                "Renamed successfully!",
+                                                Toast.LENGTH_SHORT
+                                        ).show();
                                     }
                                     else {
-                                        Toast.makeText(getContext(), "Couldn't rename!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(
+                                                getContext(),
+                                                "Couldn't rename!",
+                                                Toast.LENGTH_SHORT
+                                        ).show();
                                     }
                                 }
                                 else {
-                                    Toast.makeText(getContext(), "Couldn't rename, current file name already exists!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(
+                                            getContext(),
+                                            "Couldn't rename, This file name already exists!",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
                                 }
+                                optionDialog.cancel();
                             }
                         });
 
@@ -300,14 +320,23 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
                                 "Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                file.delete();
-                                fileList.remove(filePosition);
-                                fileAdapter.notifyDataSetChanged();
-                                Toast.makeText(
-                                        getContext(),
-                                        fileName + " Deleted successfully",
-                                        Toast.LENGTH_SHORT
-                                ).show();
+                                if (file.delete()) {
+                                    fileList.remove(filePosition);
+                                    fileAdapter.notifyDataSetChanged();
+                                    Toast.makeText(
+                                            getContext(),
+                                            fileName + " Deleted successfully",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                                else {
+                                    Toast.makeText(
+                                            getContext(),
+                                            "Cannot delete " + fileName,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                                optionDialog.cancel();
                             }
                         });
 

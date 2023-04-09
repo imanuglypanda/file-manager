@@ -51,7 +51,6 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
     private RecyclerView recyclerView;
     private FileAdapter fileAdapter;
     private List<File> fileList;
-    private ImageView img_back;
     private TextView tv_pathHolder;
     File storage;
     String data;
@@ -60,19 +59,19 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_internal, container, false);
 
         tv_pathHolder = view.findViewById(R.id.tv_pathHolder);
-        img_back = view.findViewById(R.id.img_black);
 
         String internalStorage = System.getenv("EXTERNAL_STORAGE");
+        assert internalStorage != null;
         storage = new File(internalStorage);
 
         try {
             data = getArguments().getString("path");
-            File file = new File(data);
-            storage = file;
+            storage = new File(data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -221,6 +220,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                         AlertDialog.Builder renameDialog = new AlertDialog.Builder(getContext());
                         renameDialog.setTitle("Rename File:");
                         final EditText name = new EditText(getContext());
+                        name.setText(file.getName().substring(0, file.getName().indexOf(".")));
                         renameDialog.setView(name);
 
                         renameDialog.setPositiveButton(
@@ -228,26 +228,47 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String new_name = name.getEditableText().toString();
-                                String extension = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
+                                String extension = file.getAbsolutePath().substring(
+                                        file.getAbsolutePath().lastIndexOf(".")
+                                );
                                 File current = new File(file.getAbsolutePath());
-                                File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extension);
+                                File destination = new File(file.getAbsolutePath()
+                                        .replace(file.getName(), new_name) + extension);
                                 if (noFileNameExist(destination.getName())) {
                                     if (current.renameTo(destination)) {
                                         try {
                                             fileList.set(filePosition, destination);
                                         } catch (Exception e) {
-                                            Toast.makeText(getContext(), String.valueOf(e), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(
+                                                    getContext(),
+                                                    String.valueOf(e),
+                                                    Toast.LENGTH_SHORT
+                                            ).show();
                                         }
                                         fileAdapter.notifyItemChanged(filePosition);
-                                        Toast.makeText(getContext(), "Renamed successfully!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(
+                                                getContext(),
+                                                "Renamed successfully!",
+                                                Toast.LENGTH_SHORT
+                                        ).show();
                                     }
                                     else {
-                                        Toast.makeText(getContext(), "Couldn't rename!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(
+                                                getContext(),
+
+                                                "Couldn't rename!",
+                                                Toast.LENGTH_SHORT
+                                        ).show();
                                     }
                                 }
                                 else {
-                                    Toast.makeText(getContext(), "Couldn't rename, current file name already exists!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(
+                                            getContext(),
+                                            "Couldn't rename, This file name already exists!",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
                                 }
+                                optionDialog.cancel();
                             }
                         });
 
@@ -270,14 +291,23 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                                 "Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                file.delete();
-                                fileList.remove(filePosition);
-                                fileAdapter.notifyDataSetChanged();
-                                Toast.makeText(
-                                        getContext(),
-                                        fileName + " Deleted successfully",
-                                        Toast.LENGTH_SHORT
-                                ).show();
+                                if (file.delete()) {
+                                    fileList.remove(filePosition);
+                                    fileAdapter.notifyDataSetChanged();
+                                    Toast.makeText(
+                                            getContext(),
+                                            fileName + " Deleted successfully",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                                else {
+                                    Toast.makeText(
+                                            getContext(),
+                                            "Cannot delete " + fileName,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                                optionDialog.cancel();
                             }
                         });
 
