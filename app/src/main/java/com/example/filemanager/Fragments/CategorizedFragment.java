@@ -49,8 +49,6 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
     private RecyclerView recyclerView;
     private FileAdapter fileAdapter;
     private List<File> fileList;
-    File storage;
-    String data;
     String[] items = {"Details", "Rename", "Delete", "Share"};
     File path;
     View view;

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -112,24 +113,25 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
             holder.mediaTime.setText(getTotalDuration(file.get(position)));
         }
         else if (fileName.endsWith(".mp4")) {
-//            holder.imgFile.setImageResource(R.drawable.ic_video);
             retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(file.get(position).getAbsolutePath());
-            Bitmap frameBitmap = retriever.getFrameAtTime(
-                    0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
-            if (frameBitmap != null) {
-                holder.imgFile.setImageBitmap(frameBitmap);
-                try {
-                    retriever.release();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                holder.mediaTime.setText(getTotalDuration(file.get(position)));
+            try {
+                retriever.setDataSource(file.get(position).getAbsolutePath());
+                Bitmap frameBitmap = retriever.getFrameAtTime(
+                        0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+                if (frameBitmap != null) {
+                    holder.imgFile.setImageBitmap(frameBitmap);
+                    try {
+                        retriever.release();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    holder.imgFile.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    holder.mediaTime.setText(getTotalDuration(file.get(position)));
 
-            } else {
-                holder.imgFile.setImageResource(R.drawable.ic_video);
-            }
+                } else {
+                    holder.imgFile.setImageResource(R.drawable.ic_video);
+                }
+            } catch (IllegalArgumentException ignored) {}
         }
         else if (fileName.endsWith(".apk")) {
             holder.imgFile.setImageResource(R.drawable.ic_android);

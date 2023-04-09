@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -25,6 +27,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -32,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.filemanager.FileAdapter;
 import com.example.filemanager.FileOpener;
+import com.example.filemanager.MainActivity;
 import com.example.filemanager.OnFileSelectedListener;
 import com.example.filemanager.R;
 import com.karumi.dexter.Dexter;
@@ -56,6 +61,7 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
     private LinearLayout linearImage, linearVideo, linearMusic, linearDocs, linearDownloads, linearApks;
     String[] items = {"Details", "Rename", "Delete", "Share"};
     View view;
+    private static final int PERMISSION_REQUEST_CODE = 13;
 
     @Nullable
     @Override
