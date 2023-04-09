@@ -220,17 +220,26 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                         AlertDialog.Builder renameDialog = new AlertDialog.Builder(getContext());
                         renameDialog.setTitle("Rename File:");
                         final EditText name = new EditText(getContext());
-                        name.setText(file.getName().substring(0, file.getName().indexOf(".")));
+                        if (file.isDirectory()) {
+                            name.setText(file.getName());
+                        } else {
+                            name.setText(file.getName().substring(0, file.getName().indexOf(".")));
+                        }
                         renameDialog.setView(name);
 
                         renameDialog.setPositiveButton(
                                 "OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                String extension;
                                 String new_name = name.getEditableText().toString();
-                                String extension = file.getAbsolutePath().substring(
-                                        file.getAbsolutePath().lastIndexOf(".")
-                                );
+                                if (file.isDirectory()) {
+                                    extension = "";
+                                } else {
+                                    extension = file.getAbsolutePath().substring(
+                                            file.getAbsolutePath().lastIndexOf(".")
+                                    );
+                                }
                                 File current = new File(file.getAbsolutePath());
                                 File destination = new File(file.getAbsolutePath()
                                         .replace(file.getName(), new_name) + extension);
