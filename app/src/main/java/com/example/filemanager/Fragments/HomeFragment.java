@@ -61,7 +61,6 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
     private LinearLayout linearImage, linearVideo, linearMusic, linearDocs, linearDownloads, linearApks;
     String[] items = {"Details", "Rename", "Delete", "Share"};
     View view;
-    private static final int PERMISSION_REQUEST_CODE = 13;
 
     @Nullable
     @Override
