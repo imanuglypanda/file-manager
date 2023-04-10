@@ -32,7 +32,6 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
-    private TextView fragmentCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,10 +123,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .remove(fragment)
-                .commit();
-        super.onBackPressed();
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(fragment)
+                    .commit();
+            super.onBackPressed();
+        }
     }
 }
